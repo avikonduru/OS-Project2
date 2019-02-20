@@ -1,0 +1,69 @@
+Kumaravinash Konduru
+kxk151330
+CS 4348.501
+
+Project 2 - Pseudocode
+
+int guestNumber = 25;
+int emptyRoom = 0;
+semaphore front_desk_available = 2;
+semaphore bellhops_available = 2;
+semaphore bellhop_needed = 0;
+semaphore check_in_ready = 0;
+semaphore receive_room_key = 0;
+semaphore bags_recieved = 0;
+semaphore bag_devlivered = 0;
+
+void Guest(){
+
+	int guestNumber;
+	int bagNumber = Random number from 0-5;
+	enterHotel();
+	wait(front_desk_available);
+	signal(check_in_ready);
+	wait(receive_room_key);
+	roomRecieved();
+	
+	if(bagNumber > 2){
+	
+		requestHelp();
+		signal(bellhop_needed);
+		wait(bags_recieved);
+	
+	}
+	
+	enterRoom();
+	wait(bag_devlivered);
+	guestRetires();
+	guestJoined();
+
+}
+
+void FrontDesk(){
+
+	while(true){
+	
+		wait(check_in_ready);
+		checkIn();
+		roomEmpty++;
+		signal(receive_room_key);
+		signal(front_desk_available);
+	
+	}
+
+}
+
+void Bellhop(){
+
+	while(true){
+	
+		wait(bellhop_needed);
+		wait(bellhops_available);
+		receivesBags();
+		signal(bags_recieved);
+		bagDelivered();
+		signal(bag_devlivered);
+	
+	}
+
+}
